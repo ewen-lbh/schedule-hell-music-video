@@ -1,1 +1,1 @@
-<iframe width="560" height="315" src="https://www.youtube.com/embed/D2O9eNFenaA?si=VWg4FvOakfERUMVt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![Click to view the video (WIP)](https://img.youtube.com/vi/D2O9eNFenaA/0.jpg)](https://www.youtube.com/watch?v=D2O9eNFenaA "ewen-lbh - Schedule Hell")
