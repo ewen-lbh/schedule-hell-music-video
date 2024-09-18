@@ -1,0 +1,11 @@
+[package]
+name = "video"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.82"
+itertools = "0.12.1"
+num_cpus = "1.16.0"
+pico-args = { version = "0.5.0", features = ["combined-flags", "eq-separator"] }
+shapemaker = { path = "../../shapemaker/" }
