@@ -6,13 +6,15 @@ use shapemaker::*;
 
 struct State {
     bass_pattern_at: Region,
+    bass_notes_hits: usize,
     kick_color: Color,
 }
 
 impl Default for State {
     fn default() -> Self {
         Self {
-            bass_pattern_at: Region::from_topleft(Point(1, 1), (2, 2)).unwrap(),
+            bass_pattern_at: Region::from_points(Point(1, 1), Point(2, 2)).expect("valid region"),
+            bass_notes_hits: 0,
             kick_color: Color::White,
         }
     }
@@ -58,8 +60,12 @@ pub fn main() -> Result<()> {
     video.fps = 30;
     video.audiofile = PathBuf::from("../schedule-hell.flac");
     video = video
-        .init(&|canvas, _| {
+        .init(&|canvas, ctx| {
             canvas.set_background(Color::Black);
+
+            ctx.extra.bass_pattern_at =
+                Region::from_center_and_size(canvas.world_region.center(), (2, 2))
+                    .expect("valid region");
 
             let mut kicks = Layer::new("anchor kick");
 
@@ -97,6 +103,29 @@ pub fn main() -> Result<()> {
                 Ok(())
             });
 
+            Ok(())
+        })
+        .on_note("bass", &|_, ctx| {
+            ctx.extra.bass_notes_hits += 1;
+            Ok(())
+        })
+        .each_beat(&|canvas, ctx| {
+            if ctx.beat % 8 == 0 && ctx.extra.bass_pattern_at.height() <= 9 {
+                ctx.extra.bass_pattern_at = ctx.extra.bass_pattern_at.resized(2, 2);
+                canvas.layer("bass").add_object(
+                    "flashbang",
+                    ctx.extra
+                        .bass_pattern_at
+                        .rectangle()
+                        .color(Fill::Solid(Color::White)),
+                );
+
+                ctx.animate_layer("bass", 200, &|t, layer, _| {
+                    layer.object("flashbang").fill =
+                        layer.object("flashbang").fill.opacify(1.0 - t);
+                    Ok(())
+                });
+            }
             Ok(())
         })
         .on_note("bass", &|canvas, ctx| {
